@@ -29,7 +29,11 @@ public class FrontController extends HttpServlet{
 		System.out.println("front init()");
 //		list.put("/요청하는페이지이름.do", "컨트롤러");
 		//		  └>/요청하는페이지이름.do  └>컨트롤러
-		list.put("/memberInsert.do", new memberInsertController());
+		list.put("/memberInsert.do", new MemberInsertController());
+		list.put("/memberSearch.do", new MemberSearchController());
+		list.put("/memberUpdate.do", new MemberUpdateController());
+		list.put("/memberDelete.do", new MemberDeleteController());
+		list.put("/memberList.do", new MemberListController());
 	}
 	
 	@Override

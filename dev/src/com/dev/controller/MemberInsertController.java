@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.dev.service.MemberService;
 import com.dev.vo.MemberVO;
 
-public class memberInsertController implements Controller{
+public class MemberInsertController implements Controller{
 
 	@Override
 	public void excute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

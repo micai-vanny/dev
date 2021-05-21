@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -58,6 +60,54 @@ public class MemberDAO {
 		}
 	}
 	
+	// 전체 조회
+	public List<MemberVO> listMember(){
+		connect();
+		String sql = "select * from member_b order by 1";
+		List<MemberVO> memberList = new ArrayList<MemberVO>();
+		try {
+			psmt = conn.prepareStatement(sql); // psmt 객체로 sql 전달
+			rs = psmt.executeQuery();
+			while(rs.next()) {
+				MemberVO member = new MemberVO();
+				member.setId(rs.getString("id"));
+				member.setName(rs.getString("name"));
+				member.setMail(rs.getString("mail"));
+				member.setPasswd(rs.getString("passwd"));
+				memberList.add(member);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return memberList;
+	}
+	
+	// 한건 조회
+	public MemberVO searchMember(String id) {
+		connect();
+		String sql = "select * from member_b where id = ?";
+		MemberVO member = null;
+		try {
+			psmt = conn.prepareStatement(sql); // psmt 객체로 sql 전달
+			psmt.setString(1, id);
+			rs = psmt.executeQuery();
+			if(rs.next()) {
+				member = new MemberVO();
+				member.setId(rs.getString("id"));
+				member.setName(rs.getString("name"));
+				member.setMail(rs.getString("mail"));
+				member.setPasswd(rs.getString("passwd"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return member;
+	}
+	
 	// DB처리 기능.
 	public void insertMember(MemberVO member) {
 		connect();
@@ -72,6 +122,46 @@ public class MemberDAO {
 			
 			int in = psmt.executeUpdate();
 			System.out.println(in + "건 입력 완료.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	}
+	
+	// 회원 정보 수정
+	public MemberVO updateMember(MemberVO member) {
+		connect();
+		String sql = "update member_b set passwd = ?, name = ?, mail = ? where id = ?";
+		
+		try {
+			psmt = conn.prepareStatement(sql);
+			
+			psmt.setString(1, member.getPasswd());
+			psmt.setString(2, member.getName());
+			psmt.setString(3, member.getMail());
+			psmt.setString(4, member.getId());
+			
+			int up = psmt.executeUpdate();
+			System.out.println(up+"건 수정완료.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return member;
+	}
+	
+	// 회원 정보 삭제
+	public void deleteMember(String id) {
+		connect();
+		String sql = "delete from member_b where id = ?";
+		
+		try {
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, id);
+			int del = psmt.executeUpdate();
+			System.out.println(del + "건 삭제완료.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
